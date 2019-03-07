@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="340.0" prefWidth="415.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Planner.Controllers.ModulatorController">
+   <children>
+      <Button fx:id="ButWaitTime" layoutX="19.0" layoutY="35.0" mnemonicParsing="false" onAction="#show" text="Время ожидания " />
+      <Button fx:id="ButAverWaitTime" layoutX="19.0" layoutY="77.0" mnemonicParsing="false" onAction="#show" text="Среднее время ожидания в очереди" />
+      <Button fx:id="ButLoadFactor" layoutX="19.0" layoutY="118.0" mnemonicParsing="false" onAction="#show" text="Средняя загруженность процессоров" />
+      <Label fx:id="Label_Queue_Size" layoutX="23.0" layoutY="183.0" />
+      <Label fx:id="Label_Dead_Task" layoutX="23.0" layoutY="213.0" />
+      <Button fx:id="ButDeadKoef" layoutX="19.0" layoutY="158.0" mnemonicParsing="false" onAction="#show" text="Процент откинутых задач в зависимости от интенсивности" />
+   </children>
+</AnchorPane>
