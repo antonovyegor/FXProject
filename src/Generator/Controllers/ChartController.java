@@ -13,7 +13,9 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
+
 
 import java.util.concurrent.CountDownLatch;
 
@@ -33,7 +35,8 @@ public class ChartController {
     @FXML // fx:id="chart"
     private LineChart<?, ?> chart; // Value injected by FXMLLoader
 
-
+    @FXML
+    private Label Label;
 
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -41,11 +44,12 @@ public class ChartController {
         assert yAxis != null : "fx:id=\"yAxis\" was not injected: check your FXML file 'Chart.fxml'.";
         assert xAxis != null : "fx:id=\"xAxis\" was not injected: check your FXML file 'Chart.fxml'.";
         assert chart != null : "fx:id=\"chart\" was not injected: check your FXML file 'Chart.fxml'.";
+        assert Label != null : "fx:id=\"Label\" was not injected: check your FXML file 'Chart.fxml'.";
 
     }
 
     public void draw(FXMLLoader loader, String id, Gen genX,Gen genY){
-
+        long start;
 
         if (!genY.equals(this.genY)) {
             this.genY=genY;
@@ -89,14 +93,16 @@ public class ChartController {
                     series.getData().add(new XYChart.Data(  Integer.toString(i), this.genX.getR(i)));
                 break;
            case "ButF" :
+               start = System.currentTimeMillis();
                chart.setTitle("График F");
                series.setName("F");
                this.genX.runF();
                for (int i=0;i<genX.getN();i++)
                    series.getData().add(new XYChart.Data(  Integer.toString(i), this.genX.getF(i)));
+               Label.setText("Time = "+(System.currentTimeMillis() - start));
                break;
            case "ButFFT" :
-               //genX.initF();
+               start = System.currentTimeMillis();
                this.genX.runW();
                chart.setTitle("График FFT");
                series.setName("FFT");
@@ -118,8 +124,10 @@ public class ChartController {
 
                for (int i=0;i<genX.getN();i++) {
                    series.getData().add(new XYChart.Data(Integer.toString(i), this.genX.getF(i)));
-                   System.out.println(i + "  : " + this.genX.getF(i));
+                  // System.out.println(i + "  : " + this.genX.getF(i));
                }
+               Label.setText("Time = "+(System.currentTimeMillis() - start));
+
                break;
         }
         chart.getData().add(series);
