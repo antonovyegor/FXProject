@@ -33,7 +33,7 @@
                   <Insets left="30.0" />
                </opaqueInsets>
             </Label>
-            <TextField fx:id="m_x_field" promptText="6" text="6" />
+            <TextField fx:id="m_x_field" text="2" />
          </children>
       </VBox>
       <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
@@ -43,7 +43,7 @@
                   <Insets left="30.0" />
                </opaqueInsets>
             </Label>
-            <TextField fx:id="w_x_field" promptText="1200" text="1200" />
+            <TextField fx:id="w_x_field" text="1200" />
          </children>
       </VBox>
       <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
@@ -53,7 +53,7 @@
                   <Insets left="30.0" />
                </opaqueInsets>
             </Label>
-            <TextField fx:id="N_x_field" promptText="500" text="500" />
+            <TextField fx:id="N_x_field" text="64" />
          </children>
       </VBox>
       <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
@@ -63,7 +63,7 @@
                   <Insets left="30.0" />
                </opaqueInsets>
             </Label>
-            <TextField fx:id="delta_x_field" promptText="0.001" text="0.001" />
+            <TextField fx:id="delta_x_field" text="0.01" />
          </children>
       </VBox>
       <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
@@ -164,7 +164,7 @@
                   <Insets left="5.0" right="5.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="ButFFT"  onAction="#show" mnemonicParsing="false" text="Быстрое преобразование">
+            <Button fx:id="ButFFT" mnemonicParsing="false" onAction="#show" text="Быстрое преобразование">
                <VBox.margin>
                   <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                </VBox.margin>

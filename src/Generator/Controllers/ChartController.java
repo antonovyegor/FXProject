@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 import java.util.concurrent.CountDownLatch;
 
 public class ChartController {
+    private static Gen genX;
+    private static Gen genY;
 
 
     public  static  CountDownLatch START,FIHISH ;
@@ -31,8 +33,6 @@ public class ChartController {
     @FXML // fx:id="chart"
     private LineChart<?, ?> chart; // Value injected by FXMLLoader
 
-    private Gen genX;
-    private Gen genY;
 
 
 
@@ -56,55 +56,55 @@ public class ChartController {
             genX.run();
         }
 
-
-       XYChart.Series series = new XYChart.Series();
-       switch (id) {
+        XYChart.Series series = new XYChart.Series();
+        chart.getData().clear();
+        switch (id) {
 
             case "ButShowX":
                 chart.setTitle("График X(t)");
                 series.setName("X");
                 for (int i=0;i<genX.getN();i++)
-                    series.getData().add(new XYChart.Data(  Integer.toString(i), genX.getX(i)));
+                    series.getData().add(new XYChart.Data(  Integer.toString(i), this.genX.getX(i)));
                 break;
             case "ButShowY" :
                 chart.setTitle("График Y(t)");
                 series.setName("Y");
                 for (int i=0;i<genY.getN();i++)
-                    series.getData().add(new XYChart.Data(  Integer.toString(i), genY.getX(i)));
+                    series.getData().add(new XYChart.Data(  Integer.toString(i), this.genY.getX(i)));
                 break;
             case "ButRxx" :
                 chart.setTitle("График Rxx(t)");
                 series.setName("Rxx");
                 int tau = genX.getN()/5;
-                genX.runR(genX,tau);
+                this.genX.runR(genX,tau);
                 for (int i=0;i<tau;i++)
-                    series.getData().add(new XYChart.Data(  Integer.toString(i), genX.getR(i)));
+                    series.getData().add(new XYChart.Data(  Integer.toString(i), this.genX.getR(i)));
                 break;
             case "ButRxy" :
                 chart.setTitle("График Rxy(t)");
                 series.setName("Rxy");
                 tau = genX.getN()/5;
-                genX.runR(genY,tau);
+                this.genX.runR(genY,tau);
                 for (int i=0;i<tau;i++)
-                    series.getData().add(new XYChart.Data(  Integer.toString(i), genX.getR(i)));
+                    series.getData().add(new XYChart.Data(  Integer.toString(i), this.genX.getR(i)));
                 break;
            case "ButF" :
                chart.setTitle("График F");
                series.setName("F");
-               genX.runF();
-               for (int i=0;i<genX.getN()/2;i++)
-                   series.getData().add(new XYChart.Data(  Integer.toString(i), genX.getF(i)));
+               this.genX.runF();
+               for (int i=0;i<genX.getN();i++)
+                   series.getData().add(new XYChart.Data(  Integer.toString(i), this.genX.getF(i)));
                break;
            case "ButFFT" :
-               genX.initF();
-               genX.runW();
+               //genX.initF();
+               this.genX.runW();
                chart.setTitle("График FFT");
                series.setName("FFT");
                START = new CountDownLatch(2);
                FIHISH = new CountDownLatch(2);
-               FFT T2 = new FFT(genX);
+               FFT T2 = new FFT(this.genX,0);
                T2.setName("2");
-               FFT T1 = new FFT(genX);
+               FFT T1 = new FFT(this.genX,1);
                T1.setName("1");
 
                T1.start();
@@ -117,8 +117,8 @@ public class ChartController {
                }
 
                for (int i=0;i<genX.getN();i++) {
-                   series.getData().add(new XYChart.Data(Integer.toString(i), genX.getF(i)));
-                   System.out.println(i + "  : " + genX.getF(i));
+                   series.getData().add(new XYChart.Data(Integer.toString(i), this.genX.getF(i)));
+                   System.out.println(i + "  : " + this.genX.getF(i));
                }
                break;
         }

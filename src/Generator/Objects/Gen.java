@@ -23,22 +23,6 @@ public class Gen {
     private int time;
     private Random rand1, rand2;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Gen gen = (Gen) o;
-        return m_garm == gen.m_garm &&
-                Wmax == gen.Wmax &&
-                N == gen.N &&
-                Double.compare(gen.deltaT, deltaT) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(m_garm, Wmax, N, deltaT);
-    }
-
     public void run(){
         this.X = new double [N];
         System.out.println("------------------");
@@ -73,6 +57,22 @@ public class Gen {
 
     public double getX(int i) {
         return X[i];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Gen gen = (Gen) o;
+        return m_garm == gen.m_garm &&
+                Wmax == gen.Wmax &&
+                getN() == gen.getN() &&
+                Double.compare(gen.deltaT, deltaT) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(m_garm, Wmax, getN(), deltaT);
     }
 
     public Gen (int m, int Wmax, int N, double delta){
@@ -144,7 +144,7 @@ public class Gen {
         this.setW1 = new TreeSet<>();
         for(int p=0;p<getN();p++)
             for (int k=0;k<getN();k++){
-                setW1.add(new W(p*k,Math.cos(2*Math.PI*p*k/(getN()/1)),Math.sin(2*Math.PI*p*k/(getN()/1))));
+                setW1.add(new W(p*k,Math.cos(2*Math.PI*p*k/(getN())),Math.sin(2*Math.PI*p*k/(getN()))));
             }
     }
 
@@ -164,9 +164,9 @@ public class Gen {
     }
 
     public void runF(){
-        this.F = new double [N/2];
+        this.F = new double [N];
         runW();
-        for (int p=0;p<getN()/2;p++){
+        for (int p=0;p<getN();p++){
             double real=0;
             double im=0;
             for(int k=0;k<getN();k++){
@@ -179,16 +179,14 @@ public class Gen {
         }
     }
 
-    public void runFFT() {
-        int l = 999999;
-        if (Thread.currentThread().getName()=="1") {
-            l = 1;
+    public void runFFT( int i) {
+
+        if (i==1) {
             F1_Real = new double[getN()/2];
             F1_Im = new double[getN()/2];
             F = new double[getN()];
         }
-        if (Thread.currentThread().getName()=="2") {
-            l = 0;
+        if (i==0) {
             F2_Real = new double[getN()/2];
             F2_Im = new double[getN()/2];
         }
@@ -197,14 +195,14 @@ public class Gen {
         for (int p = 0; p < getN() / 2; p++) {
 
             for (int k = 0; k < getN() / 2; k++) {
-                W w = getW1(p * (2*k+l));
-                if (Thread.currentThread().getName()=="2") {
-                    F2_Real[p] += getX(2 * k + l) * w.getReal();
-                    F2_Im[p] += getX(2 * k + l) * w.getImag();
+                W w = getW1(p * (2*k+i));
+                if (i==0) {
+                    F2_Real[p] += getX(2 * k + i) * w.getReal();
+                    F2_Im[p] += getX(2 * k + i) * w.getImag();
                 }
-                if (Thread.currentThread().getName()=="1") {
-                    F1_Real[p] += getX(2 * k + l) * w.getReal();
-                    F1_Im[p] += getX(2 * k + l) * w.getImag();
+                if (i==1) {
+                    F1_Real[p] += getX(2 * k + i) * w.getReal();
+                    F1_Im[p] += getX(2 * k + i) * w.getImag();
                 }
             }
 
@@ -216,12 +214,9 @@ public class Gen {
             e.printStackTrace();
         }
 
-        if (Thread.currentThread().getName()=="2") {
-            runF1_F2();
-        }
-        if (Thread.currentThread().getName()=="1") {
-            runF1_F2();
-        }
+
+        runF1_F2(i);
+
     }
 
     public void initF() {
@@ -236,24 +231,26 @@ public class Gen {
         F = f;
     }
 
-    public void runF1_F2() {
+    public void runF1_F2(int i) {
 
         for (int p = 0; p < getN() / 2; p++) {
 
-            if (Thread.currentThread().getName()=="1") {
+            if (i==1) {
                 W w = getW1(p);
-                double real=0;
-                double im =0 ;
+                double real,im;
+
                 real = F2_Real[p] + w.getReal() * F1_Real[p] + w.getImag() * F1_Im[p];
                 im = F2_Im[p] + w.getReal() * F1_Im[p] + w.getImag() * F1_Real[p];
                 F[p] = Math.sqrt(real * real + im * im);
             }
-            if (Thread.currentThread().getName()=="2") {
+            if (i==0) {
+                //W w = getW1(p+getN() / 2);
                 W w = getW1(p);
-                double real=0;
-                double im =0 ;
-                real =  w.getReal() * F2_Real[p] +  w.getImag() * F2_Im[p] - F1_Real[p];
-                im =  w.getReal() * F2_Im[p] + w.getImag() * F2_Real[p]   - F2_Im[p];
+                double real,im;
+                real = F2_Real[p] + w.getReal() * F1_Real[p] + w.getImag() * F1_Im[p];
+                im = F2_Im[p] + w.getReal() * F1_Im[p] + w.getImag() * F1_Real[p];
+//                real =  w.getReal() * F2_Real[p] +  w.getImag() * F2_Im[p] - F1_Real[p];
+//                im =  w.getReal() * F2_Im[p] + w.getImag() * F2_Real[p]   - F2_Im[p];
                 F[p + getN() / 2] = Math.sqrt(real * real + im * im);
             }
             ChartController.FIHISH.countDown();
