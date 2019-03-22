@@ -21,9 +21,7 @@ public class Modulator extends Application {
     public static Stage MainStage;
     public static Parent root;
 
-    /*public static XYChart.Series average_wait_time_series ;
-    public static XYChart.Series loadfactor_series ;
-    public static XYChart.Series dead_tasks_series ;*/
+
 
     public static void main(String args[]){
 

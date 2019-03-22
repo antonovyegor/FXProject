@@ -174,7 +174,7 @@ public class Gen {
                 im += getX(k) * w.getImag();
             }
             F[p] = Math.sqrt(real * real + im * im);
-            System.out.println(p + "  : " + F[p]);
+            //System.out.println(p + "  : " + F[p]);
         }
     }
 

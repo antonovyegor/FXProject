@@ -27,7 +27,7 @@ public class ModulatorRM extends Application {
         ModulatorController.loadfactor_series = new XYChart.Series();
         ModulatorController.dead_tasks_series = new XYChart.Series();
 
-        for(double lamda = 1;lamda>=0.1; lamda-=0.1)
+        for(double lamda = 10;lamda>0; lamda-=0.1)
             {
                 ModulatorController.TIME = 0;
             ArrayList<PriorityTask> dead_list = new ArrayList<>();
